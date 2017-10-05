@@ -18,10 +18,11 @@ build:
   skip: True  # [py2k or win]
 
 requirements:
-  build:
+  host:
     - python
     - setuptools
-    - toolchain
+  build:
+    - {{ compiler('c') }}
   run:
     - python
 
