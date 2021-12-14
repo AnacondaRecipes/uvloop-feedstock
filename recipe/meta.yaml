@@ -21,7 +21,9 @@ requirements:
     - python                                 # [build_platform != target_platform]
     - cython                                 # [build_platform != target_platform]
     - {{ compiler('c') }}
-    - make  # [unix]
+    - make      # [unix]
+    - patch     # [unix]
+    - m2-patch  # [win]
   host:
     - python
     - cython >=0.28
