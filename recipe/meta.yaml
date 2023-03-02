@@ -22,10 +22,9 @@ requirements:
     - {{ compiler('c') }}
     - make      # [unix]
     - patch     # [unix]
-    - python
   host:
     - python
-    - cython 0.29.32
+    - cython
     - pip
     - libuv
   run:
