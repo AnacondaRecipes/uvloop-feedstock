@@ -13,7 +13,8 @@ source:
 
 build:
   number: 0
-  script: {{ PYTHON }} -m pip install . -vv --no-deps --global-option='build_ext' --global-option='--cython-always' --global-option='--use-system-libuv'
+  script:
+    - {{ PYTHON }} -m pip install . -vv --no-deps --global-option='build_ext' --global-option='--cython-always' --global-option='--use-system-libuv'
   skip: true  # [py<37 or win]
 
 requirements:
@@ -21,6 +22,7 @@ requirements:
     - {{ compiler('c') }}
     - make      # [unix]
     - patch     # [unix]
+    - python
   host:
     - python
     - cython 0.29.32
