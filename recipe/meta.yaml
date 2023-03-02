@@ -13,20 +13,17 @@ source:
 
 build:
   number: 0
-  script: {{ PYTHON }} -m pip install . -vv --global-option='build_ext' --global-option='--cython-always' --global-option='--use-system-libuv'
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --global-option='build_ext' --global-option='--cython-always' --global-option='--use-system-libuv'
   skip: true  # [py<37 or win]
 
 requirements:
   build:
-    - python                                 # [build_platform != target_platform]
-    - cython                                 # [build_platform != target_platform]
     - {{ compiler('c') }}
     - make      # [unix]
     - patch     # [unix]
-    - m2-patch  # [win]
   host:
     - python
-    - cython >=0.28
+    - cython 0.29.32
     - pip
     - libuv
   run:
@@ -36,10 +33,15 @@ requirements:
 test:
   imports:
     - uvloop
+  require:
+    - pip
+  commands:
+    - pip check
 
 about:
   home: http://github.com/MagicStack/uvloop
   license: MIT OR Apache-2.0
+  license_family: Other
   license_file:
     - LICENSE-MIT
     - LICENSE-APACHE
