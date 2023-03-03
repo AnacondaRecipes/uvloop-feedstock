@@ -34,7 +34,7 @@ requirements:
 test:
   imports:
     - uvloop
-  require:
+  requires:
     - pip
   commands:
     - pip check
