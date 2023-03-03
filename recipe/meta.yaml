@@ -24,7 +24,7 @@ requirements:
     - patch     # [unix]
   host:
     - python
-    - cython
+    - cython 0.29.32
     - pip
     - libuv
   run:
