@@ -27,6 +27,8 @@ requirements:
     - cython 0.29.32
     - pip
     - libuv
+    - setuptools
+    - wheel
   run:
     - python
     - {{ pin_compatible("libuv", max_pin="x") }}
@@ -40,7 +42,7 @@ test:
     - pip check
 
 about:
-  home: http://github.com/MagicStack/uvloop
+  home: https://github.com/MagicStack/uvloop
   license: MIT OR Apache-2.0
   license_family: Other
   license_file:
@@ -50,7 +52,7 @@ about:
   description: |
     uvloop is a fast, drop-in replacement of the built-in asyncio event loop.
     uvloop is implemented in Cython and uses libuv under the hood.
-  doc_url: http://uvloop.readthedocs.org
+  doc_url: https://uvloop.readthedocs.io/
   dev_url: https://github.com/MagicStack/uvloop
 
 extra:
