@@ -12,9 +12,9 @@ source:
     - 0001-Prefer-SO_REUSEPORT-over-uv.SO_REUSEPORT.patch
 
 build:
-  number: 0
+  number: 1
   script:
-    - {{ PYTHON }} -m pip install . -vv --no-deps --global-option='build_ext' --global-option='--cython-always' --global-option='--use-system-libuv'
+    - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation --global-option='build_ext' --global-option='--cython-always' --global-option='--use-system-libuv'
   skip: true  # [py<37 or win]
 
 requirements:
@@ -24,7 +24,7 @@ requirements:
     - patch     # [unix]
   host:
     - python
-    - cython 0.29.32
+    - cython 0.29
     - pip
     - libuv
     - setuptools
