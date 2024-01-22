@@ -13,7 +13,7 @@ build:
   number: 0
   script:
     - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation --config-settings=--global-option='build_ext' --config-settings=--global-option='--cython-always' --config-settings=--global-option='--use-system-libuv'
-  skip: true  # [py<38]
+  skip: true  # [py<38 or win]
 
 requirements:
   build:
@@ -43,7 +43,8 @@ test:
     - pyopenssl
   commands:
     - pip check
-    - pytest -ra -k "not (test_sourcecode)"
+    # skip test_process_delayed_stdio__not_paused__no_stdin: time is not monotonic on CI
+    - pytest -ra -k "not (test_sourcecode or test_process_delayed_stdio__not_paused__no_stdin)"
 
 about:
   home: https://github.com/MagicStack/uvloop
