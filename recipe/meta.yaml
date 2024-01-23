@@ -1,5 +1,5 @@
 {% set name = "uvloop" %}
-{% set version = "0.17.0" %}
+{% set version = "0.19.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,26 +7,22 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 0ddf6baf9cf11a1a22c71487f39f15b2cf78eb5bde7e5b45fbb99e8a9d91b9e1
-  patches:
-    - 0001-Prefer-SO_REUSEPORT-over-uv.SO_REUSEPORT.patch
+  sha256: 0246f4fd1bf2bf702e06b0d45ee91677ee5c31242f39aab4ea6fe0c51aedd0fd
 
 build:
   number: 0
   script:
-    - {{ PYTHON }} -m pip install . -vv --no-deps --global-option='build_ext' --global-option='--cython-always' --global-option='--use-system-libuv'
-  skip: true  # [py<37 or win]
+    - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation --config-settings=--global-option='build_ext' --config-settings=--global-option='--cython-always' --config-settings=--global-option='--use-system-libuv'
+  skip: true  # [py<38 or win]
 
 requirements:
   build:
     - {{ compiler('c') }}
-    - make      # [unix]
-    - patch     # [unix]
   host:
     - python
-    - cython 0.29.32
+    - cython >=0.29.36,<0.30.0
     - pip
-    - libuv
+    - libuv 1.44.2
     - setuptools
     - wheel
   run:
@@ -34,12 +30,22 @@ requirements:
     - {{ pin_compatible("libuv", max_pin="x") }}
 
 test:
+  source_files:
+    - pyproject.toml
+    - tests
   imports:
     - uvloop
   requires:
     - pip
+    - pytest
+    - aiohttp
+    - psutil
+    - pyopenssl
   commands:
     - pip check
+    - pytest -ra -k "not (test_sourcecode)" # [not (osx and arm64)]
+    # skip test_process_delayed_stdio__not_paused__no_stdin: time is not monotonic on CI
+    - pytest -ra -k "not (test_sourcecode or test_process_delayed_stdio__not_paused__no_stdin or test_create_ssl_server_manual_connection_lost)" # [osx and arm64]
 
 about:
   home: https://github.com/MagicStack/uvloop
