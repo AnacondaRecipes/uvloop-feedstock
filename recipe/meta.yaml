@@ -20,10 +20,10 @@ requirements:
     - {{ compiler('c') }}
   host:
     - python
-    - cython >=0.29.36,<0.30.0
+    - cython >=3.0,<4.0
     - pip
     - libuv 1.44.2
-    - setuptools
+    - setuptools >=60
     - wheel
   run:
     - python
