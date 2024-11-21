@@ -12,7 +12,7 @@ source:
 build:
   number: 0
   script:
-    - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation --config-settings=--global-option='build_ext' --config-settings=--global-option='--cython-always' --config-settings=--global-option='--use-system-libuv'
+    - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation --config-settings="--build-option=build_ext" --config-settings="--build-option=--cython-always" --config-settings="--build-option=--use-system-libuv'
   skip: true  # [py<38 or win]
 
 requirements:
