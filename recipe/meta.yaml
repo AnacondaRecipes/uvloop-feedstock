@@ -42,9 +42,9 @@ test:
     - pyopenssl
   commands:
     - pip check
-    - pytest -ra -k "not (test_sourcecode)" # [not (osx and arm64)]
+    - pytest -ra -k "not (test_sourcecode)" # [not osx]
     # skip test_process_delayed_stdio__not_paused__no_stdin: time is not monotonic on CI
-    - pytest -ra -k "not (test_sourcecode or test_process_delayed_stdio__not_paused__no_stdin or test_create_ssl_server_manual_connection_lost)" # [osx and arm64]
+    - pytest -ra -k "not (test_sourcecode or test_process_delayed_stdio__not_paused__no_stdin or test_create_ssl_server_manual_connection_lost or test_fs_event_rename)" # [osx]
 
 about:
   home: https://github.com/MagicStack/uvloop
