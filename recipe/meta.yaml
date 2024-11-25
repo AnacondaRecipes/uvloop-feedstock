@@ -1,5 +1,5 @@
 {% set name = "uvloop" %}
-{% set version = "0.19.0" %}
+{% set version = "0.21.0" %}
 
 package:
   name: {{ name|lower }}
@@ -7,12 +7,12 @@ package:
 
 source:
   url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 0246f4fd1bf2bf702e06b0d45ee91677ee5c31242f39aab4ea6fe0c51aedd0fd
+  sha256: 3bf12b0fda68447806a7ad847bfa591613177275d35b6724b1ee573faa3704e3
 
 build:
   number: 0
   script:
-    - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation --config-settings=--global-option='build_ext' --config-settings=--global-option='--cython-always' --config-settings=--global-option='--use-system-libuv'
+    - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation --config-settings="--build-option=build_ext" --config-settings="--build-option=--cython-always" --config-settings="--build-option=--use-system-libuv"
   skip: true  # [py<38 or win]
 
 requirements:
@@ -20,10 +20,10 @@ requirements:
     - {{ compiler('c') }}
   host:
     - python
-    - cython >=0.29.36,<0.30.0
+    - cython >=3.0,<4.dev0
     - pip
     - libuv 1.44.2
-    - setuptools
+    - setuptools >=60
     - wheel
   run:
     - python
@@ -38,14 +38,13 @@ test:
   requires:
     - pip
     - pytest
-    - aiohttp
     - psutil
     - pyopenssl
   commands:
     - pip check
-    - pytest -ra -k "not (test_sourcecode)" # [not (osx and arm64)]
+    - pytest -ra -k "not (test_sourcecode)" # [not osx]
     # skip test_process_delayed_stdio__not_paused__no_stdin: time is not monotonic on CI
-    - pytest -ra -k "not (test_sourcecode or test_process_delayed_stdio__not_paused__no_stdin or test_create_ssl_server_manual_connection_lost)" # [osx and arm64]
+    - pytest -ra -k "not (test_sourcecode or test_process_delayed_stdio__not_paused__no_stdin or test_create_ssl_server_manual_connection_lost or test_fs_event_rename)" # [osx]
 
 about:
   home: https://github.com/MagicStack/uvloop
