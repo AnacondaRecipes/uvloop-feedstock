@@ -30,7 +30,7 @@ requirements:
     - python
     - {{ pin_compatible("libuv", max_pin="x") }}
   run_constrained:
-    python >=3.8.1
+    - python >=3.8.1
 
 # The test fails because SSL connection closure completes the data_received future earlier than the test expects.
 {% set deselect_tests = " --deselect=tests/test_context.py::Test_UV_Context::test_create_ssl_server_manual_connection_lost" %}
