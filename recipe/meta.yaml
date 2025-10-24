@@ -1,13 +1,13 @@
 {% set name = "uvloop" %}
-{% set version = "0.21.0" %}
+{% set version = "0.22.1" %}
 
 package:
   name: {{ name|lower }}
   version: {{ version }}
 
 source:
-  url: https://pypi.io/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 3bf12b0fda68447806a7ad847bfa591613177275d35b6724b1ee573faa3704e3
+  url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
+  sha256: 6c84bae345b9147082b17371e3dd5d42775bddce91f885499017f4607fdaf39f
 
 build:
   number: 0
@@ -17,34 +17,41 @@ build:
 
 requirements:
   build:
+    - {{ stdlib('c') }}
     - {{ compiler('c') }}
   host:
-    - python
-    - cython >=3.0,<4.dev0
     - pip
-    - libuv 1.44.2
+    - python
     - setuptools >=60
     - wheel
+    - cython >=3.1,<4
+    - libuv {{ libuv }}
   run:
     - python
     - {{ pin_compatible("libuv", max_pin="x") }}
+  run_constrained:
+    python >=3.8.1
+
+# The test fails because SSL connection closure completes the data_received future earlier than the test expects.
+{% set deselect_tests = " --deselect=tests/test_context.py::Test_UV_Context::test_create_ssl_server_manual_connection_lost" %}
+# file .flake8 was removed from the release on pypi and GitHub.
+{% set deselect_tests = " --deselect=tests/test_sourcecode.py::TestSourceCode::test_flake8" %}
 
 test:
   source_files:
-    - pyproject.toml
     - tests
+    - pyproject.toml
+    - mypy.ini
   imports:
     - uvloop
+  commands:
+    - pip check
+    - pytest -v {{ deselect_tests }}
   requires:
     - pip
     - pytest
     - psutil
     - pyopenssl
-  commands:
-    - pip check
-    - pytest -ra -k "not (test_sourcecode)" # [not osx]
-    # skip test_process_delayed_stdio__not_paused__no_stdin: time is not monotonic on CI
-    - pytest -ra -k "not (test_sourcecode or test_process_delayed_stdio__not_paused__no_stdin or test_create_ssl_server_manual_connection_lost or test_fs_event_rename)" # [osx]
 
 about:
   home: https://github.com/MagicStack/uvloop
@@ -57,7 +64,7 @@ about:
   description: |
     uvloop is a fast, drop-in replacement of the built-in asyncio event loop.
     uvloop is implemented in Cython and uses libuv under the hood.
-  doc_url: https://uvloop.readthedocs.io/
+  doc_url: https://uvloop.readthedocs.io
   dev_url: https://github.com/MagicStack/uvloop
 
 extra:
