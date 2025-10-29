@@ -1,5 +1,10 @@
 {% set name = "uvloop" %}
 {% set version = "0.22.1" %}
+{% set deselect_tests = " --deselect=tests/test_context.py::Test_UV_Context::test_create_ssl_server_manual_connection_lost" %}
+{% set deselect_tests = 'deselect_tests + " --deselect=tests/test_sourcecode.py::TestSourceCode::test_flake8"' %}
+{% set deselect_tests = 'deselect_tests + " --deselect=tests/test_tcp.py::Test_AIO_TCP::test_create_connection_open_con_addr"' %}
+{% set deselect_tests = 'deselect_tests + " --deselect=tests/test_pipes.py::Test_UV_Pipes::test_write_buffer_full"' %}
+{% set deselect_tests = 'deselect_tests + " --deselect=tests/test_pipes.py::Test_AIO_Pipes::test_write_buffer_full"' %}
 
 package:
   name: {{ name|lower }}
@@ -10,7 +15,7 @@ source:
   sha256: 6c84bae345b9147082b17371e3dd5d42775bddce91f885499017f4607fdaf39f
 
 build:
-  number: 0
+  number: 1
   script:
     - {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation --config-settings="--build-option=build_ext" --config-settings="--build-option=--cython-always" --config-settings="--build-option=--use-system-libuv"
   skip: true  # [py<38 or win]
@@ -33,15 +38,10 @@ requirements:
     - python >=3.8.1
 
 # The test fails because SSL connection closure completes the data_received future earlier than the test expects.
-{% set deselect_tests = " --deselect=tests/test_context.py::Test_UV_Context::test_create_ssl_server_manual_connection_lost" %}
 # file .flake8 was removed from the release on pypi and GitHub.
-{% set deselect_tests = deselect_tests + " --deselect=tests/test_sourcecode.py::TestSourceCode::test_flake8" %}
 # Passed locally but randomly failed on build platform:
 # AssertionError: timed out
-{% set deselect_tests = deselect_tests + " --deselect=tests/test_tcp.py::Test_AIO_TCP::test_create_connection_open_con_addr" %}
 # AssertionError: Didn't reach a full buffer
-{% set deselect_tests = deselect_tests + " --deselect=tests/test_pipes.py::Test_UV_Pipes::test_write_buffer_full" %}
-{% set deselect_tests = deselect_tests + " --deselect=tests/test_pipes.py::Test_AIO_Pipes::test_write_buffer_full" %}
 test:
   source_files:
     - tests
