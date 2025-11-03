@@ -44,7 +44,7 @@ requirements:
 {% set deselect_tests = deselect_tests + " --deselect=tests/test_pipes.py::Test_AIO_Pipes::test_write_buffer_full" %}
 # ProcessPoolExecutor fork-safety issues on Python 3.14:
 # Three uvloop tests fail on Python 3.14 with `BrokenProcessPool` errors and libuv deadlocks.
-{% set deselect_tests = deselect_tests + " --deselect=tests/test_executors.py::TestUVExecutors::test_executors_process_pool_01" %}   # [linux andpy==314]
+{% set deselect_tests = deselect_tests + " --deselect=tests/test_executors.py::TestUVExecutors::test_executors_process_pool_01" %}   # [linux and py==314]
 {% set deselect_tests = deselect_tests + " --deselect=tests/test_executors.py::TestAIOExecutors::test_executors_process_pool_01" %}  # [linux and py==314]
 {% set deselect_tests = deselect_tests + " --deselect=tests/test_regr1.py::TestIssue39Regr::test_issue39_regression" %}          # [linux and py==314]
 
